@@ -6,6 +6,8 @@ Dashboard interativo de vendas para um varejo fictício de eletrônicos, constru
 
 ![Preview do dashboard](./dashboard_techvarejo.png)
 
+[▶ Link para o dashboard] —  https://rafael-robsonn.github.io/Dashboard-BI_1/dashboard_techvarejo.html
+
 ## Conteúdo do repositório
 
 | Arquivo | Descrição |
