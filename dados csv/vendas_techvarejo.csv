@@ -1,0 +1,101 @@
+id_pedido,data_pedido,uf,regiao,canal_venda,categoria_produto,forma_pagamento,segmento_cliente,quantidade,preco_unitario,desconto_pct,receita_liquida,custo_total,tempo_entrega_dias,avaliacao_cliente
+PED-0001,2026-04-01,PE,Nordeste,E-commerce,Smartphones,Pix,B2B,11,1821.67,5.0,19036.45,16231.74,7,4.3
+PED-0002,2025-09-07,PE,Nordeste,Loja Fisica,Monitores,Cartao Credito,B2C,4,2293.5,0.0,9174.0,7100.35,7,4.1
+PED-0003,2026-06-04,SP,Sudeste,Marketplace,Notebooks,Cartao Credito,B2B,14,5175.53,0.0,72457.42,61924.16,4,4.2
+PED-0004,2026-04-28,RJ,Sudeste,E-commerce,Smartphones,Cartao Credito,B2B,4,4664.68,15.0,15859.91,15669.79,1,4.5
+PED-0005,2025-11-12,SP,Sudeste,App Movel,Smartphones,Cartao Credito,B2C,1,4197.77,5.0,3987.88,3525.09,5,3.9
+PED-0006,2026-03-22,RJ,Sudeste,E-commerce,Audio,Cartao Debito,B2B,9,484.68,0.0,4362.12,3188.73,4,3.7
+PED-0007,2026-04-13,GO,Centro-Oeste,E-commerce,Monitores,Pix,B2B,11,1251.76,5.0,13080.89,11167.37,4,4.2
+PED-0008,2026-08-17,PR,Sul,App Movel,Audio,Pix,B2C,2,895.51,5.5,1692.51,1265.74,3,4.1
+PED-0009,2026-03-01,BA,Nordeste,App Movel,Notebooks,Cartao Debito,B2B,8,3679.67,4.8,28024.37,24026.93,10,3.2
+PED-0010,2025-11-17,CE,Nordeste,E-commerce,Perifericos,Cartao Credito,B2B,11,396.66,5.0,4145.1,2910.57,4,3.8
+PED-0011,2026-03-01,SC,Sul,E-commerce,Perifericos,Pix,Assinante,3,204.52,0.0,613.56,401.5,6,4.2
+PED-0012,2026-06-25,PR,Sul,Marketplace,Notebooks,Boleto,B2C,2,5808.35,22.0,9061.03,9934.26,4,3.2
+PED-0013,2026-05-13,PA,Norte,Loja Fisica,Monitores,Cartao Credito,B2C,1,1409.98,5.2,1336.66,1070.1,10,3.7
+PED-0014,2026-04-08,SP,Sudeste,E-commerce,Notebooks,Cartao Credito,B2C,1,5518.71,10.0,4966.84,4698.38,2,4.0
+PED-0015,2026-02-14,SP,Sudeste,Loja Fisica,Notebooks,Cartao Credito,B2C,3,6095.47,16.0,15360.58,14392.69,2,4.4
+PED-0016,2026-07-08,SP,Sudeste,E-commerce,Perifericos,Pix,B2C,4,119.2,15.8,401.47,320.95,5,4.3
+PED-0017,2026-03-01,AM,Norte,Marketplace,Smart Home,Pix,B2C,1,432.81,0.0,432.81,307.85,11,3.4
+PED-0018,2026-06-15,RJ,Sudeste,Marketplace,Monitores,Cartao Debito,B2B,10,1025.07,0.0,10250.7,8370.3,1,3.9
+PED-0019,2026-06-02,SP,Sudeste,App Movel,Perifericos,Cartao Credito,B2C,2,522.7,0.0,1045.4,650.15,4,3.6
+PED-0020,2026-08-19,SP,Sudeste,Loja Fisica,Perifericos,Cartao Credito,B2C,2,566.05,0.0,1132.1,751.77,3,4.6
+PED-0021,2026-05-10,MG,Sudeste,App Movel,Smart Home,Pix,B2C,2,197.99,5.2,375.39,285.27,4,4.3
+PED-0022,2025-09-08,RJ,Sudeste,Marketplace,Smartphones,Cartao Credito,B2C,8,3919.71,0.0,31357.68,27499.24,2,4.8
+PED-0023,2026-08-05,SP,Sudeste,Marketplace,Smart Home,Pix,B2C,1,387.45,11.0,344.83,288.81,2,4.1
+PED-0024,2026-07-02,SP,Sudeste,E-commerce,Perifericos,Pix,B2B,13,589.49,0.0,7663.37,4952.22,2,3.5
+PED-0025,2025-10-23,GO,Centro-Oeste,Marketplace,Perifericos,Cartao Credito,B2C,1,240.29,15.8,202.32,160.81,7,2.9
+PED-0026,2025-11-08,BA,Nordeste,Loja Fisica,Smartphones,Cartao Debito,Assinante,3,4925.33,5.0,14037.19,12135.71,7,3.4
+PED-0027,2026-01-06,PE,Nordeste,App Movel,Smartphones,Cartao Debito,Assinante,3,2487.18,7.5,6901.92,6093.75,9,2.9
+PED-0028,2025-11-27,MT,Centro-Oeste,Marketplace,Smartphones,Cartao Debito,B2C,2,2974.32,5.0,5651.21,4838.63,5,3.4
+PED-0029,2026-03-22,PA,Norte,App Movel,Perifericos,Pix,Assinante,1,580.52,0.0,580.52,362.56,8,4.0
+PED-0030,2025-12-20,PA,Norte,App Movel,Notebooks,Pix,B2C,1,5435.66,25.2,4065.87,4540.53,12,3.0
+PED-0031,2025-11-14,SP,Sudeste,E-commerce,Monitores,Pix,B2B,14,2590.1,12.5,31728.73,28755.93,2,4.8
+PED-0032,2026-03-07,MG,Sudeste,Marketplace,Smart Home,Boleto,B2C,1,547.39,0.0,547.39,385.72,1,4.5
+PED-0033,2026-04-15,MG,Sudeste,Loja Fisica,Monitores,Cartao Debito,Assinante,3,2083.59,0.0,6250.77,4955.49,3,3.9
+PED-0034,2026-08-08,BA,Nordeste,E-commerce,Smartphones,Pix,B2C,1,4644.03,0.0,4644.03,3913.65,6,3.6
+PED-0035,2026-05-16,MG,Sudeste,Marketplace,Notebooks,Boleto,Assinante,4,6547.21,0.0,26188.84,22127.92,2,3.6
+PED-0036,2026-03-28,SP,Sudeste,Loja Fisica,Notebooks,Cartao Credito,B2C,1,6447.58,4.8,6138.1,5453.56,4,3.6
+PED-0037,2026-07-15,GO,Centro-Oeste,Loja Fisica,Audio,Pix,B2C,2,1107.27,5.2,2099.38,1569.83,5,4.1
+PED-0038,2025-12-09,RJ,Sudeste,E-commerce,Smart Home,Pix,B2C,1,286.88,11.8,253.03,203.06,2,4.2
+PED-0039,2026-07-13,GO,Centro-Oeste,Marketplace,Perifericos,Cartao Debito,B2B,9,328.03,21.0,2332.29,1880.33,3,4.7
+PED-0040,2026-07-18,PE,Nordeste,Loja Fisica,Perifericos,Pix,B2C,1,95.09,0.0,95.09,62.92,6,4.0
+PED-0041,2026-02-05,PA,Norte,App Movel,Perifericos,Cartao Credito,B2B,4,414.23,0.0,1656.92,1072.87,11,3.6
+PED-0042,2025-11-11,RJ,Sudeste,E-commerce,Audio,Boleto,B2C,3,737.88,20.0,1770.91,1480.14,4,3.9
+PED-0043,2025-09-21,SP,Sudeste,E-commerce,Notebooks,Cartao Debito,B2C,1,5236.31,0.0,5236.31,4486.03,2,4.2
+PED-0044,2025-12-20,RS,Sul,E-commerce,Audio,Cartao Debito,Assinante,1,182.1,5.0,172.99,129.73,5,3.8
+PED-0045,2026-05-03,SC,Sul,E-commerce,Audio,Cartao Credito,B2C,2,1156.91,10.5,2070.87,1630.35,6,4.0
+PED-0046,2026-05-03,PR,Sul,Marketplace,Smartphones,Cartao Debito,B2C,8,3851.66,15.8,25944.78,26734.26,2,4.5
+PED-0047,2026-08-09,RS,Sul,Marketplace,Smart Home,Cartao Credito,B2B,12,329.35,16.5,3300.09,2939.7,7,4.3
+PED-0048,2025-11-15,SC,Sul,E-commerce,Monitores,Cartao Credito,B2C,1,1445.13,5.0,1372.87,1102.36,1,3.6
+PED-0049,2026-03-17,MS,Centro-Oeste,Marketplace,Notebooks,Cartao Credito,B2B,14,5247.2,9.5,66482.02,59925.67,6,3.9
+PED-0050,2026-01-08,RJ,Sudeste,Loja Fisica,Perifericos,Cartao Credito,B2C,3,252.01,7.5,699.33,480.16,3,4.3
+PED-0051,2025-11-04,PE,Nordeste,Marketplace,Smart Home,Pix,B2B,7,685.18,30,3357.38,3461.82,7,4.0
+PED-0052,2025-11-08,RJ,Sudeste,Marketplace,Smartphones,Pix,B2C,1,2580.91,30,1806.64,2224.02,3,3.8
+PED-0053,2025-09-10,MG,Sudeste,E-commerce,Perifericos,Pix,Assinante,1,507.5,5.0,482.12,315.83,3,3.9
+PED-0054,2025-10-19,MS,Centro-Oeste,E-commerce,Notebooks,Cartao Credito,B2C,2,5859.2,10.5,10487.97,9494.14,6,3.6
+PED-0055,2026-04-14,RJ,Sudeste,Loja Fisica,Monitores,Cartao Debito,Assinante,1,1143.15,10.0,1028.84,861.08,3,4.2
+PED-0056,2025-09-15,BA,Nordeste,E-commerce,Perifericos,Pix,B2C,4,117.01,0.0,468.04,297.06,8,3.0
+PED-0057,2026-06-07,MG,Sudeste,Loja Fisica,Perifericos,Boleto,B2B,4,111.01,11.0,395.2,291.37,5,2.9
+PED-0058,2026-01-15,BA,Nordeste,App Movel,Monitores,Cartao Credito,B2C,1,783.71,3.8,753.93,600.43,7,4.0
+PED-0059,2026-08-27,DF,Centro-Oeste,E-commerce,Perifericos,Cartao Debito,B2B,12,100.92,11.0,1077.83,784.85,3,3.2
+PED-0060,2025-11-19,MG,Sudeste,App Movel,Audio,Cartao Credito,B2C,1,280.75,5.0,266.71,194.79,1,4.2
+PED-0061,2026-01-25,SC,Sul,E-commerce,Perifericos,Pix,Assinante,1,347.59,15.0,295.45,229.5,3,3.9
+PED-0062,2025-11-12,RS,Sul,Loja Fisica,Perifericos,Pix,B2C,1,229.78,27.5,166.59,149.13,6,3.9
+PED-0063,2026-06-23,SP,Sudeste,Loja Fisica,Perifericos,Pix,Assinante,5,319.95,0.0,1599.75,1074.37,1,4.2
+PED-0064,2026-03-09,MG,Sudeste,Loja Fisica,Perifericos,Cartao Credito,B2C,1,391.68,9.5,354.47,245.34,5,4.3
+PED-0065,2026-07-11,MS,Centro-Oeste,Marketplace,Perifericos,Pix,B2C,2,599.43,5.2,1136.52,751.88,4,3.9
+PED-0066,2026-03-18,RJ,Sudeste,App Movel,Smart Home,Boleto,B2C,1,787.69,4.8,749.88,556.82,1,4.4
+PED-0067,2025-12-22,MA,Nordeste,E-commerce,Monitores,Boleto,B2C,8,1397.19,5.0,10618.64,9019.29,10,4.1
+PED-0068,2025-09-05,MG,Sudeste,E-commerce,Monitores,Cartao Credito,Assinante,1,2154.68,10.0,1939.21,1739.77,5,3.1
+PED-0069,2025-12-11,RS,Sul,Loja Fisica,Smart Home,Cartao Credito,B2C,1,653.83,5.0,621.14,457.93,8,4.4
+PED-0070,2026-06-23,GO,Centro-Oeste,Marketplace,Perifericos,Boleto,B2C,3,232.55,5.5,659.28,437.4,3,3.9
+PED-0071,2026-06-06,SP,Sudeste,E-commerce,Monitores,Cartao Credito,B2C,2,1187.6,11.0,2113.93,1845.17,1,3.3
+PED-0072,2026-02-10,BA,Nordeste,Loja Fisica,Smartphones,Pix,B2C,2,3069.94,0.0,6139.88,5399.11,7,4.2
+PED-0073,2026-02-08,MG,Sudeste,E-commerce,Smartphones,Cartao Credito,B2C,3,2964.48,0.0,8893.44,7835.39,4,2.7
+PED-0074,2026-07-24,PR,Sul,E-commerce,Smart Home,Cartao Debito,B2C,1,616.56,10.5,551.82,451.81,4,3.3
+PED-0075,2026-07-21,SP,Sudeste,E-commerce,Monitores,Cartao Debito,B2C,1,975.96,15.8,821.76,748.06,2,4.3
+PED-0076,2026-06-12,PR,Sul,Marketplace,Smart Home,Pix,B2B,10,874.56,0.0,8745.6,6530.06,5,3.4
+PED-0077,2025-09-25,AM,Norte,Marketplace,Audio,Boleto,Assinante,3,607.22,10.0,1639.49,1213.18,8,3.5
+PED-0078,2026-05-22,SP,Sudeste,Loja Fisica,Smartphones,Pix,B2B,10,1592.59,15.8,13409.61,13620.14,4,3.8
+PED-0079,2025-09-27,MG,Sudeste,Loja Fisica,Monitores,Pix,B2C,1,2791.45,0.0,2791.45,2119.59,2,4.0
+PED-0080,2025-12-24,BA,Nordeste,Loja Fisica,Perifericos,Cartao Credito,Assinante,2,513.52,18.5,837.04,696.89,7,4.5
+PED-0081,2025-11-15,AM,Norte,E-commerce,Audio,Cartao Credito,B2C,8,598.34,12.5,4188.38,3246.77,12,4.0
+PED-0082,2026-02-22,SP,Sudeste,App Movel,Monitores,Pix,B2C,8,2352.65,0.0,18821.2,15164.73,1,4.0
+PED-0083,2026-06-08,RJ,Sudeste,App Movel,Notebooks,Pix,Assinante,1,3758.97,0.0,3758.97,2982.02,3,4.0
+PED-0084,2025-09-26,CE,Nordeste,E-commerce,Perifericos,Pix,B2C,1,139.1,0.0,139.1,89.95,6,4.3
+PED-0085,2026-02-08,MS,Centro-Oeste,Marketplace,Notebooks,Cartao Debito,B2C,1,7345.31,0.0,7345.31,6010.49,3,4.5
+PED-0086,2026-02-15,SP,Sudeste,Loja Fisica,Notebooks,Pix,B2C,2,5557.93,0.0,11115.86,9565.86,1,4.1
+PED-0087,2026-04-04,MA,Nordeste,Marketplace,Notebooks,Cartao Debito,B2C,4,5049.3,15.0,17167.62,16418.96,8,3.2
+PED-0088,2026-05-11,MG,Sudeste,E-commerce,Monitores,Pix,Assinante,1,2446.72,0.0,2446.72,1831.45,3,3.1
+PED-0089,2026-03-19,AM,Norte,Marketplace,Perifericos,Cartao Credito,Assinante,5,299.93,14.2,1286.7,931.05,10,3.9
+PED-0090,2025-10-17,SP,Sudeste,E-commerce,Monitores,Pix,B2B,8,941.26,0.0,7530.08,5712.62,1,4.5
+PED-0091,2026-06-20,RS,Sul,E-commerce,Monitores,Boleto,B2B,7,760.8,0.0,5325.6,4262.97,5,3.7
+PED-0092,2025-11-05,SC,Sul,E-commerce,Perifericos,Cartao Credito,B2C,3,191.87,12.5,503.66,368.19,2,4.7
+PED-0093,2026-06-19,SC,Sul,E-commerce,Smart Home,Cartao Debito,B2C,1,465.63,5.5,440.02,338.84,3,4.2
+PED-0094,2026-03-12,MG,Sudeste,Marketplace,Smartphones,Cartao Credito,B2B,3,2315.92,19.0,5627.69,5642.67,4,5
+PED-0095,2026-06-25,SP,Sudeste,E-commerce,Smartphones,Cartao Debito,B2C,1,4103.58,5.5,3877.88,3604.32,3,3.9
+PED-0096,2026-07-02,MG,Sudeste,E-commerce,Perifericos,Pix,B2C,1,412.87,0.0,412.87,265.82,4,3.9
+PED-0097,2026-08-15,DF,Centro-Oeste,E-commerce,Smart Home,Cartao Debito,B2C,2,528.69,5.5,999.22,746.87,4,4.4
+PED-0098,2025-11-17,RS,Sul,E-commerce,Perifericos,Cartao Debito,B2C,5,415.63,5.0,1974.24,1297.14,4,4.3
+PED-0099,2025-10-25,RS,Sul,Marketplace,Smartphones,Cartao Credito,B2B,15,3644.03,10.5,48921.1,48236.43,1,3.1
+PED-0100,2025-12-21,RJ,Sudeste,Loja Fisica,Perifericos,Cartao Credito,B2B,12,109.21,11.8,1155.88,835.69,3,4.1
