@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechVarejo · Painel Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --card:#ffffff; --line:#d7dde8; --line2:#c3ccdb;
+  --ink:#16233a; --muted:#4c5d76; --faint:#8494ab;
+  --pri:#1f5fbf;
+  --c1:#1f5fbf; --c2:#0e9488; --c3:#d97e06; --c4:#c2455a; --c5:#6d5bbf; --c6:#4e8a3a;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:ui-monospace,'JetBrains Mono','Cascadia Code',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:var(--body);color:var(--ink);background:var(--bg);padding:22px;min-height:100vh}
+.wrap{max-width:1240px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;margin-bottom:18px}
+.brand h1{font-family:var(--disp);font-size:1.4rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.brand h1 em{font-style:normal;color:var(--pri)}
+.brand p{color:var(--muted);font-size:.8rem;margin-top:2px}
+.filters{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font-size:.74rem;font-weight:600;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line2);
+  background:#fff;color:var(--muted);cursor:pointer;user-select:none;transition:.15s}
+.chip:hover{border-color:var(--pri);color:var(--pri)}
+.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.chip.clear{border-style:dashed;color:#b4540a;border-color:#d97e06;background:#fdf4e7}
+.hint{font-size:.72rem;color:var(--faint);width:100%;text-align:right}
+
+/* ---------- painéis ---------- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px;
+  box-shadow:0 1px 3px rgba(22,35,58,.06)}
+.ptitle{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ptitle .tag{font-family:var(--disp);font-size:.7rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--pri);background:#e8effc;border:1px solid #c5d7f4;
+  padding:4px 10px;border-radius:6px}
+.ptitle .rule{flex:1;height:1px;background:var(--line)}
+
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.kpi{background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi .lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.kpi .val{font-family:var(--mono);font-size:1.4rem;font-weight:700;margin-top:4px;color:var(--ink)}
+.kpi .val small{font-size:.8rem;font-weight:600;color:var(--muted)}
+.kpi.hi{background:#e8effc;border-color:#b7cdf0}
+.kpi.hi .val{color:var(--pri)}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.grid.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;min-height:310px}
+.card.full{grid-column:1/-1}
+.card h2{font-family:var(--disp);font-size:.95rem;font-weight:600;color:var(--ink)}
+.card .sub{font-size:.74rem;color:var(--muted);margin:3px 0 10px}
+.chartbox{position:relative;flex:1;min-height:230px}
+
+/* ---------- cartograma ---------- */
+.mapgrid{flex:1;display:grid;grid-template-columns:repeat(9,1fr);grid-auto-rows:1fr;gap:5px;align-content:center}
+.uf{border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.72rem;font-weight:700;cursor:pointer;
+  aspect-ratio:1;transition:transform .12s,box-shadow .12s;border:1px solid rgba(22,35,58,.15)}
+.uf small{font-size:.56rem;font-weight:600;margin-top:1px}
+.uf:hover{transform:scale(1.1);z-index:2;box-shadow:0 3px 10px rgba(22,35,58,.25)}
+.uf.sel{box-shadow:0 0 0 2.5px var(--ink), 0 3px 12px rgba(22,35,58,.35);transform:scale(1.08);z-index:3}
+.uf.empty{background:#f0f3f8;color:var(--faint);border-color:var(--line);cursor:default;font-weight:500}
+.uf.empty:hover{transform:none;box-shadow:none}
+.maplegend{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.68rem;font-weight:600;color:var(--muted);margin-top:12px}
+.ramp{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,#dbe7f8,#8fb4e8,#3d78cf,#123f85);border:1px solid var(--line)}
+
+footer{margin-top:4px;font-size:.72rem;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+@media(max-width:960px){.kpis{grid-template-columns:repeat(3,1fr)}.grid,.grid.g3{grid-template-columns:1fr}.filters{margin-left:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <h1>TechVarejo<em>&nbsp;·</em> Painel Comercial</h1>
+    <p>Varejo de eletrônicos · set/2025 – ago/2026 · 100 pedidos sintéticos</p>
+  </div>
+  <div class="filters" id="segChips"></div>
+  <div class="hint">clique em barras, fatias ou estados do mapa para filtrar todo o painel</div>
+</header>
+
+<section class="panel">
+  <div class="ptitle"><span class="tag">Visão geral</span><span class="rule"></span></div>
+  <div class="kpis" id="kpis"></div>
+</section>
+
+<section class="panel">
+  <div class="ptitle"><span class="tag">Evolução temporal</span><span class="rule"></span></div>
+  <div class="grid">
+    <div class="card full">
+      <h2>Receita e pedidos por mês</h2>
+      <div class="sub">Barras: receita líquida (R$) · linha: nº de pedidos (eixo direito)</div>
+      <div class="chartbox"><canvas id="chMes"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="ptitle"><span class="tag">Geografia</span><span class="rule"></span></div>
+  <div class="grid">
+    <div class="card">
+      <h2>Receita por estado</h2>
+      <div class="sub">Cartograma de azulejos — cor e valor por UF · clique para filtrar</div>
+      <div class="mapgrid" id="mapa"></div>
+      <div class="maplegend"><span id="legMin">—</span><div class="ramp"></div><span id="legMax">—</span></div>
+    </div>
+    <div class="card">
+      <h2>Perfil das regiões</h2>
+      <div class="sub">Radar com métricas normalizadas (min–max, 0–1)</div>
+      <div class="chartbox"><canvas id="chRadar"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="ptitle"><span class="tag">Mix comercial</span><span class="rule"></span></div>
+  <div class="grid g3">
+    <div class="card">
+      <h2>Receita por categoria</h2>
+      <div class="sub">Barras horizontais ordenadas — tooltip mostra margem %</div>
+      <div class="chartbox"><canvas id="chCat"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Mix por canal de venda</h2>
+      <div class="sub">Rosca — participação % na receita</div>
+      <div class="chartbox"><canvas id="chCanal"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Forma de pagamento</h2>
+      <div class="sub">Barras verticais — receita por meio de pagamento</div>
+      <div class="chartbox"><canvas id="chPag"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="ptitle"><span class="tag">Rentabilidade</span><span class="rule"></span></div>
+  <div class="grid">
+    <div class="card full">
+      <h2>Desconto × margem por pedido</h2>
+      <div class="sub">Bolhas — tamanho: receita do pedido · cor: categoria</div>
+      <div class="chartbox"><canvas id="chScatter"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Dados sintéticos gerados para fins acadêmicos (seed 42)</span>
+  <span>15 colunas · 8 categóricas · 7 numéricas</span>
+</footer>
+</div>
+
+<script id="data" type="application/json">[{"id_pedido":"PED-0001","data_pedido":"2026-04-01","uf":"PE","regiao":"Nordeste","canal_venda":"E-commerce","categoria_produto":"Smartphones","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":11,"preco_unitario":1821.67,"desconto_pct":5.0,"receita_liquida":19036.45,"custo_total":16231.74,"tempo_entrega_dias":7,"avaliacao_cliente":4.3},{"id_pedido":"PED-0002","data_pedido":"2025-09-07","uf":"PE","regiao":"Nordeste","canal_venda":"Loja Fisica","categoria_produto":"Monitores","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":4,"preco_unitario":2293.5,"desconto_pct":0.0,"receita_liquida":9174.0,"custo_total":7100.35,"tempo_entrega_dias":7,"avaliacao_cliente":4.1},{"id_pedido":"PED-0003","data_pedido":"2026-06-04","uf":"SP","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Notebooks","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":14,"preco_unitario":5175.53,"desconto_pct":0.0,"receita_liquida":72457.42,"custo_total":61924.16,"tempo_entrega_dias":4,"avaliacao_cliente":4.2},{"id_pedido":"PED-0004","data_pedido":"2026-04-28","uf":"RJ","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Smartphones","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":4,"preco_unitario":4664.68,"desconto_pct":15.0,"receita_liquida":15859.91,"custo_total":15669.79,"tempo_entrega_dias":1,"avaliacao_cliente":4.5},{"id_pedido":"PED-0005","data_pedido":"2025-11-12","uf":"SP","regiao":"Sudeste","canal_venda":"App Movel","categoria_produto":"Smartphones","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":4197.77,"desconto_pct":5.0,"receita_liquida":3987.88,"custo_total":3525.09,"tempo_entrega_dias":5,"avaliacao_cliente":3.9},{"id_pedido":"PED-0006","data_pedido":"2026-03-22","uf":"RJ","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Audio","forma_pagamento":"Cartao Debito","segmento_cliente":"B2B","quantidade":9,"preco_unitario":484.68,"desconto_pct":0.0,"receita_liquida":4362.12,"custo_total":3188.73,"tempo_entrega_dias":4,"avaliacao_cliente":3.7},{"id_pedido":"PED-0007","data_pedido":"2026-04-13","uf":"GO","regiao":"Centro-Oeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":11,"preco_unitario":1251.76,"desconto_pct":5.0,"receita_liquida":13080.89,"custo_total":11167.37,"tempo_entrega_dias":4,"avaliacao_cliente":4.2},{"id_pedido":"PED-0008","data_pedido":"2026-08-17","uf":"PR","regiao":"Sul","canal_venda":"App Movel","categoria_produto":"Audio","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":2,"preco_unitario":895.51,"desconto_pct":5.5,"receita_liquida":1692.51,"custo_total":1265.74,"tempo_entrega_dias":3,"avaliacao_cliente":4.1},{"id_pedido":"PED-0009","data_pedido":"2026-03-01","uf":"BA","regiao":"Nordeste","canal_venda":"App Movel","categoria_produto":"Notebooks","forma_pagamento":"Cartao Debito","segmento_cliente":"B2B","quantidade":8,"preco_unitario":3679.67,"desconto_pct":4.8,"receita_liquida":28024.37,"custo_total":24026.93,"tempo_entrega_dias":10,"avaliacao_cliente":3.2},{"id_pedido":"PED-0010","data_pedido":"2025-11-17","uf":"CE","regiao":"Nordeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":11,"preco_unitario":396.66,"desconto_pct":5.0,"receita_liquida":4145.1,"custo_total":2910.57,"tempo_entrega_dias":4,"avaliacao_cliente":3.8},{"id_pedido":"PED-0011","data_pedido":"2026-03-01","uf":"SC","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"Assinante","quantidade":3,"preco_unitario":204.52,"desconto_pct":0.0,"receita_liquida":613.56,"custo_total":401.5,"tempo_entrega_dias":6,"avaliacao_cliente":4.2},{"id_pedido":"PED-0012","data_pedido":"2026-06-25","uf":"PR","regiao":"Sul","canal_venda":"Marketplace","categoria_produto":"Notebooks","forma_pagamento":"Boleto","segmento_cliente":"B2C","quantidade":2,"preco_unitario":5808.35,"desconto_pct":22.0,"receita_liquida":9061.03,"custo_total":9934.26,"tempo_entrega_dias":4,"avaliacao_cliente":3.2},{"id_pedido":"PED-0013","data_pedido":"2026-05-13","uf":"PA","regiao":"Norte","canal_venda":"Loja Fisica","categoria_produto":"Monitores","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":1409.98,"desconto_pct":5.2,"receita_liquida":1336.66,"custo_total":1070.1,"tempo_entrega_dias":10,"avaliacao_cliente":3.7},{"id_pedido":"PED-0014","data_pedido":"2026-04-08","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Notebooks","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":5518.71,"desconto_pct":10.0,"receita_liquida":4966.84,"custo_total":4698.38,"tempo_entrega_dias":2,"avaliacao_cliente":4.0},{"id_pedido":"PED-0015","data_pedido":"2026-02-14","uf":"SP","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Notebooks","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":3,"preco_unitario":6095.47,"desconto_pct":16.0,"receita_liquida":15360.58,"custo_total":14392.69,"tempo_entrega_dias":2,"avaliacao_cliente":4.4},{"id_pedido":"PED-0016","data_pedido":"2026-07-08","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":4,"preco_unitario":119.2,"desconto_pct":15.8,"receita_liquida":401.47,"custo_total":320.95,"tempo_entrega_dias":5,"avaliacao_cliente":4.3},{"id_pedido":"PED-0017","data_pedido":"2026-03-01","uf":"AM","regiao":"Norte","canal_venda":"Marketplace","categoria_produto":"Smart Home","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":432.81,"desconto_pct":0.0,"receita_liquida":432.81,"custo_total":307.85,"tempo_entrega_dias":11,"avaliacao_cliente":3.4},{"id_pedido":"PED-0018","data_pedido":"2026-06-15","uf":"RJ","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Monitores","forma_pagamento":"Cartao Debito","segmento_cliente":"B2B","quantidade":10,"preco_unitario":1025.07,"desconto_pct":0.0,"receita_liquida":10250.7,"custo_total":8370.3,"tempo_entrega_dias":1,"avaliacao_cliente":3.9},{"id_pedido":"PED-0019","data_pedido":"2026-06-02","uf":"SP","regiao":"Sudeste","canal_venda":"App Movel","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":2,"preco_unitario":522.7,"desconto_pct":0.0,"receita_liquida":1045.4,"custo_total":650.15,"tempo_entrega_dias":4,"avaliacao_cliente":3.6},{"id_pedido":"PED-0020","data_pedido":"2026-08-19","uf":"SP","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":2,"preco_unitario":566.05,"desconto_pct":0.0,"receita_liquida":1132.1,"custo_total":751.77,"tempo_entrega_dias":3,"avaliacao_cliente":4.6},{"id_pedido":"PED-0021","data_pedido":"2026-05-10","uf":"MG","regiao":"Sudeste","canal_venda":"App Movel","categoria_produto":"Smart Home","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":2,"preco_unitario":197.99,"desconto_pct":5.2,"receita_liquida":375.39,"custo_total":285.27,"tempo_entrega_dias":4,"avaliacao_cliente":4.3},{"id_pedido":"PED-0022","data_pedido":"2025-09-08","uf":"RJ","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Smartphones","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":8,"preco_unitario":3919.71,"desconto_pct":0.0,"receita_liquida":31357.68,"custo_total":27499.24,"tempo_entrega_dias":2,"avaliacao_cliente":4.8},{"id_pedido":"PED-0023","data_pedido":"2026-08-05","uf":"SP","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Smart Home","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":387.45,"desconto_pct":11.0,"receita_liquida":344.83,"custo_total":288.81,"tempo_entrega_dias":2,"avaliacao_cliente":4.1},{"id_pedido":"PED-0024","data_pedido":"2026-07-02","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":13,"preco_unitario":589.49,"desconto_pct":0.0,"receita_liquida":7663.37,"custo_total":4952.22,"tempo_entrega_dias":2,"avaliacao_cliente":3.5},{"id_pedido":"PED-0025","data_pedido":"2025-10-23","uf":"GO","regiao":"Centro-Oeste","canal_venda":"Marketplace","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":240.29,"desconto_pct":15.8,"receita_liquida":202.32,"custo_total":160.81,"tempo_entrega_dias":7,"avaliacao_cliente":2.9},{"id_pedido":"PED-0026","data_pedido":"2025-11-08","uf":"BA","regiao":"Nordeste","canal_venda":"Loja Fisica","categoria_produto":"Smartphones","forma_pagamento":"Cartao Debito","segmento_cliente":"Assinante","quantidade":3,"preco_unitario":4925.33,"desconto_pct":5.0,"receita_liquida":14037.19,"custo_total":12135.71,"tempo_entrega_dias":7,"avaliacao_cliente":3.4},{"id_pedido":"PED-0027","data_pedido":"2026-01-06","uf":"PE","regiao":"Nordeste","canal_venda":"App Movel","categoria_produto":"Smartphones","forma_pagamento":"Cartao Debito","segmento_cliente":"Assinante","quantidade":3,"preco_unitario":2487.18,"desconto_pct":7.5,"receita_liquida":6901.92,"custo_total":6093.75,"tempo_entrega_dias":9,"avaliacao_cliente":2.9},{"id_pedido":"PED-0028","data_pedido":"2025-11-27","uf":"MT","regiao":"Centro-Oeste","canal_venda":"Marketplace","categoria_produto":"Smartphones","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":2,"preco_unitario":2974.32,"desconto_pct":5.0,"receita_liquida":5651.21,"custo_total":4838.63,"tempo_entrega_dias":5,"avaliacao_cliente":3.4},{"id_pedido":"PED-0029","data_pedido":"2026-03-22","uf":"PA","regiao":"Norte","canal_venda":"App Movel","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":580.52,"desconto_pct":0.0,"receita_liquida":580.52,"custo_total":362.56,"tempo_entrega_dias":8,"avaliacao_cliente":4.0},{"id_pedido":"PED-0030","data_pedido":"2025-12-20","uf":"PA","regiao":"Norte","canal_venda":"App Movel","categoria_produto":"Notebooks","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":5435.66,"desconto_pct":25.2,"receita_liquida":4065.87,"custo_total":4540.53,"tempo_entrega_dias":12,"avaliacao_cliente":3.0},{"id_pedido":"PED-0031","data_pedido":"2025-11-14","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":14,"preco_unitario":2590.1,"desconto_pct":12.5,"receita_liquida":31728.73,"custo_total":28755.93,"tempo_entrega_dias":2,"avaliacao_cliente":4.8},{"id_pedido":"PED-0032","data_pedido":"2026-03-07","uf":"MG","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Smart Home","forma_pagamento":"Boleto","segmento_cliente":"B2C","quantidade":1,"preco_unitario":547.39,"desconto_pct":0.0,"receita_liquida":547.39,"custo_total":385.72,"tempo_entrega_dias":1,"avaliacao_cliente":4.5},{"id_pedido":"PED-0033","data_pedido":"2026-04-15","uf":"MG","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Monitores","forma_pagamento":"Cartao Debito","segmento_cliente":"Assinante","quantidade":3,"preco_unitario":2083.59,"desconto_pct":0.0,"receita_liquida":6250.77,"custo_total":4955.49,"tempo_entrega_dias":3,"avaliacao_cliente":3.9},{"id_pedido":"PED-0034","data_pedido":"2026-08-08","uf":"BA","regiao":"Nordeste","canal_venda":"E-commerce","categoria_produto":"Smartphones","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":4644.03,"desconto_pct":0.0,"receita_liquida":4644.03,"custo_total":3913.65,"tempo_entrega_dias":6,"avaliacao_cliente":3.6},{"id_pedido":"PED-0035","data_pedido":"2026-05-16","uf":"MG","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Notebooks","forma_pagamento":"Boleto","segmento_cliente":"Assinante","quantidade":4,"preco_unitario":6547.21,"desconto_pct":0.0,"receita_liquida":26188.84,"custo_total":22127.92,"tempo_entrega_dias":2,"avaliacao_cliente":3.6},{"id_pedido":"PED-0036","data_pedido":"2026-03-28","uf":"SP","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Notebooks","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":6447.58,"desconto_pct":4.8,"receita_liquida":6138.1,"custo_total":5453.56,"tempo_entrega_dias":4,"avaliacao_cliente":3.6},{"id_pedido":"PED-0037","data_pedido":"2026-07-15","uf":"GO","regiao":"Centro-Oeste","canal_venda":"Loja Fisica","categoria_produto":"Audio","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":2,"preco_unitario":1107.27,"desconto_pct":5.2,"receita_liquida":2099.38,"custo_total":1569.83,"tempo_entrega_dias":5,"avaliacao_cliente":4.1},{"id_pedido":"PED-0038","data_pedido":"2025-12-09","uf":"RJ","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Smart Home","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":286.88,"desconto_pct":11.8,"receita_liquida":253.03,"custo_total":203.06,"tempo_entrega_dias":2,"avaliacao_cliente":4.2},{"id_pedido":"PED-0039","data_pedido":"2026-07-13","uf":"GO","regiao":"Centro-Oeste","canal_venda":"Marketplace","categoria_produto":"Perifericos","forma_pagamento":"Cartao Debito","segmento_cliente":"B2B","quantidade":9,"preco_unitario":328.03,"desconto_pct":21.0,"receita_liquida":2332.29,"custo_total":1880.33,"tempo_entrega_dias":3,"avaliacao_cliente":4.7},{"id_pedido":"PED-0040","data_pedido":"2026-07-18","uf":"PE","regiao":"Nordeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":95.09,"desconto_pct":0.0,"receita_liquida":95.09,"custo_total":62.92,"tempo_entrega_dias":6,"avaliacao_cliente":4.0},{"id_pedido":"PED-0041","data_pedido":"2026-02-05","uf":"PA","regiao":"Norte","canal_venda":"App Movel","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":4,"preco_unitario":414.23,"desconto_pct":0.0,"receita_liquida":1656.92,"custo_total":1072.87,"tempo_entrega_dias":11,"avaliacao_cliente":3.6},{"id_pedido":"PED-0042","data_pedido":"2025-11-11","uf":"RJ","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Audio","forma_pagamento":"Boleto","segmento_cliente":"B2C","quantidade":3,"preco_unitario":737.88,"desconto_pct":20.0,"receita_liquida":1770.91,"custo_total":1480.14,"tempo_entrega_dias":4,"avaliacao_cliente":3.9},{"id_pedido":"PED-0043","data_pedido":"2025-09-21","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Notebooks","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":5236.31,"desconto_pct":0.0,"receita_liquida":5236.31,"custo_total":4486.03,"tempo_entrega_dias":2,"avaliacao_cliente":4.2},{"id_pedido":"PED-0044","data_pedido":"2025-12-20","uf":"RS","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Audio","forma_pagamento":"Cartao Debito","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":182.1,"desconto_pct":5.0,"receita_liquida":172.99,"custo_total":129.73,"tempo_entrega_dias":5,"avaliacao_cliente":3.8},{"id_pedido":"PED-0045","data_pedido":"2026-05-03","uf":"SC","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Audio","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":2,"preco_unitario":1156.91,"desconto_pct":10.5,"receita_liquida":2070.87,"custo_total":1630.35,"tempo_entrega_dias":6,"avaliacao_cliente":4.0},{"id_pedido":"PED-0046","data_pedido":"2026-05-03","uf":"PR","regiao":"Sul","canal_venda":"Marketplace","categoria_produto":"Smartphones","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":8,"preco_unitario":3851.66,"desconto_pct":15.8,"receita_liquida":25944.78,"custo_total":26734.26,"tempo_entrega_dias":2,"avaliacao_cliente":4.5},{"id_pedido":"PED-0047","data_pedido":"2026-08-09","uf":"RS","regiao":"Sul","canal_venda":"Marketplace","categoria_produto":"Smart Home","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":12,"preco_unitario":329.35,"desconto_pct":16.5,"receita_liquida":3300.09,"custo_total":2939.7,"tempo_entrega_dias":7,"avaliacao_cliente":4.3},{"id_pedido":"PED-0048","data_pedido":"2025-11-15","uf":"SC","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":1445.13,"desconto_pct":5.0,"receita_liquida":1372.87,"custo_total":1102.36,"tempo_entrega_dias":1,"avaliacao_cliente":3.6},{"id_pedido":"PED-0049","data_pedido":"2026-03-17","uf":"MS","regiao":"Centro-Oeste","canal_venda":"Marketplace","categoria_produto":"Notebooks","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":14,"preco_unitario":5247.2,"desconto_pct":9.5,"receita_liquida":66482.02,"custo_total":59925.67,"tempo_entrega_dias":6,"avaliacao_cliente":3.9},{"id_pedido":"PED-0050","data_pedido":"2026-01-08","uf":"RJ","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":3,"preco_unitario":252.01,"desconto_pct":7.5,"receita_liquida":699.33,"custo_total":480.16,"tempo_entrega_dias":3,"avaliacao_cliente":4.3},{"id_pedido":"PED-0051","data_pedido":"2025-11-04","uf":"PE","regiao":"Nordeste","canal_venda":"Marketplace","categoria_produto":"Smart Home","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":7,"preco_unitario":685.18,"desconto_pct":30.0,"receita_liquida":3357.38,"custo_total":3461.82,"tempo_entrega_dias":7,"avaliacao_cliente":4.0},{"id_pedido":"PED-0052","data_pedido":"2025-11-08","uf":"RJ","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Smartphones","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":2580.91,"desconto_pct":30.0,"receita_liquida":1806.64,"custo_total":2224.02,"tempo_entrega_dias":3,"avaliacao_cliente":3.8},{"id_pedido":"PED-0053","data_pedido":"2025-09-10","uf":"MG","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":507.5,"desconto_pct":5.0,"receita_liquida":482.12,"custo_total":315.83,"tempo_entrega_dias":3,"avaliacao_cliente":3.9},{"id_pedido":"PED-0054","data_pedido":"2025-10-19","uf":"MS","regiao":"Centro-Oeste","canal_venda":"E-commerce","categoria_produto":"Notebooks","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":2,"preco_unitario":5859.2,"desconto_pct":10.5,"receita_liquida":10487.97,"custo_total":9494.14,"tempo_entrega_dias":6,"avaliacao_cliente":3.6},{"id_pedido":"PED-0055","data_pedido":"2026-04-14","uf":"RJ","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Monitores","forma_pagamento":"Cartao Debito","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":1143.15,"desconto_pct":10.0,"receita_liquida":1028.84,"custo_total":861.08,"tempo_entrega_dias":3,"avaliacao_cliente":4.2},{"id_pedido":"PED-0056","data_pedido":"2025-09-15","uf":"BA","regiao":"Nordeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":4,"preco_unitario":117.01,"desconto_pct":0.0,"receita_liquida":468.04,"custo_total":297.06,"tempo_entrega_dias":8,"avaliacao_cliente":3.0},{"id_pedido":"PED-0057","data_pedido":"2026-06-07","uf":"MG","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Boleto","segmento_cliente":"B2B","quantidade":4,"preco_unitario":111.01,"desconto_pct":11.0,"receita_liquida":395.2,"custo_total":291.37,"tempo_entrega_dias":5,"avaliacao_cliente":2.9},{"id_pedido":"PED-0058","data_pedido":"2026-01-15","uf":"BA","regiao":"Nordeste","canal_venda":"App Movel","categoria_produto":"Monitores","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":783.71,"desconto_pct":3.8,"receita_liquida":753.93,"custo_total":600.43,"tempo_entrega_dias":7,"avaliacao_cliente":4.0},{"id_pedido":"PED-0059","data_pedido":"2026-08-27","uf":"DF","regiao":"Centro-Oeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Cartao Debito","segmento_cliente":"B2B","quantidade":12,"preco_unitario":100.92,"desconto_pct":11.0,"receita_liquida":1077.83,"custo_total":784.85,"tempo_entrega_dias":3,"avaliacao_cliente":3.2},{"id_pedido":"PED-0060","data_pedido":"2025-11-19","uf":"MG","regiao":"Sudeste","canal_venda":"App Movel","categoria_produto":"Audio","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":280.75,"desconto_pct":5.0,"receita_liquida":266.71,"custo_total":194.79,"tempo_entrega_dias":1,"avaliacao_cliente":4.2},{"id_pedido":"PED-0061","data_pedido":"2026-01-25","uf":"SC","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":347.59,"desconto_pct":15.0,"receita_liquida":295.45,"custo_total":229.5,"tempo_entrega_dias":3,"avaliacao_cliente":3.9},{"id_pedido":"PED-0062","data_pedido":"2025-11-12","uf":"RS","regiao":"Sul","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":229.78,"desconto_pct":27.5,"receita_liquida":166.59,"custo_total":149.13,"tempo_entrega_dias":6,"avaliacao_cliente":3.9},{"id_pedido":"PED-0063","data_pedido":"2026-06-23","uf":"SP","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"Assinante","quantidade":5,"preco_unitario":319.95,"desconto_pct":0.0,"receita_liquida":1599.75,"custo_total":1074.37,"tempo_entrega_dias":1,"avaliacao_cliente":4.2},{"id_pedido":"PED-0064","data_pedido":"2026-03-09","uf":"MG","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":391.68,"desconto_pct":9.5,"receita_liquida":354.47,"custo_total":245.34,"tempo_entrega_dias":5,"avaliacao_cliente":4.3},{"id_pedido":"PED-0065","data_pedido":"2026-07-11","uf":"MS","regiao":"Centro-Oeste","canal_venda":"Marketplace","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":2,"preco_unitario":599.43,"desconto_pct":5.2,"receita_liquida":1136.52,"custo_total":751.88,"tempo_entrega_dias":4,"avaliacao_cliente":3.9},{"id_pedido":"PED-0066","data_pedido":"2026-03-18","uf":"RJ","regiao":"Sudeste","canal_venda":"App Movel","categoria_produto":"Smart Home","forma_pagamento":"Boleto","segmento_cliente":"B2C","quantidade":1,"preco_unitario":787.69,"desconto_pct":4.8,"receita_liquida":749.88,"custo_total":556.82,"tempo_entrega_dias":1,"avaliacao_cliente":4.4},{"id_pedido":"PED-0067","data_pedido":"2025-12-22","uf":"MA","regiao":"Nordeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Boleto","segmento_cliente":"B2C","quantidade":8,"preco_unitario":1397.19,"desconto_pct":5.0,"receita_liquida":10618.64,"custo_total":9019.29,"tempo_entrega_dias":10,"avaliacao_cliente":4.1},{"id_pedido":"PED-0068","data_pedido":"2025-09-05","uf":"MG","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Cartao Credito","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":2154.68,"desconto_pct":10.0,"receita_liquida":1939.21,"custo_total":1739.77,"tempo_entrega_dias":5,"avaliacao_cliente":3.1},{"id_pedido":"PED-0069","data_pedido":"2025-12-11","uf":"RS","regiao":"Sul","canal_venda":"Loja Fisica","categoria_produto":"Smart Home","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":653.83,"desconto_pct":5.0,"receita_liquida":621.14,"custo_total":457.93,"tempo_entrega_dias":8,"avaliacao_cliente":4.4},{"id_pedido":"PED-0070","data_pedido":"2026-06-23","uf":"GO","regiao":"Centro-Oeste","canal_venda":"Marketplace","categoria_produto":"Perifericos","forma_pagamento":"Boleto","segmento_cliente":"B2C","quantidade":3,"preco_unitario":232.55,"desconto_pct":5.5,"receita_liquida":659.28,"custo_total":437.4,"tempo_entrega_dias":3,"avaliacao_cliente":3.9},{"id_pedido":"PED-0071","data_pedido":"2026-06-06","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":2,"preco_unitario":1187.6,"desconto_pct":11.0,"receita_liquida":2113.93,"custo_total":1845.17,"tempo_entrega_dias":1,"avaliacao_cliente":3.3},{"id_pedido":"PED-0072","data_pedido":"2026-02-10","uf":"BA","regiao":"Nordeste","canal_venda":"Loja Fisica","categoria_produto":"Smartphones","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":2,"preco_unitario":3069.94,"desconto_pct":0.0,"receita_liquida":6139.88,"custo_total":5399.11,"tempo_entrega_dias":7,"avaliacao_cliente":4.2},{"id_pedido":"PED-0073","data_pedido":"2026-02-08","uf":"MG","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Smartphones","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":3,"preco_unitario":2964.48,"desconto_pct":0.0,"receita_liquida":8893.44,"custo_total":7835.39,"tempo_entrega_dias":4,"avaliacao_cliente":2.7},{"id_pedido":"PED-0074","data_pedido":"2026-07-24","uf":"PR","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Smart Home","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":616.56,"desconto_pct":10.5,"receita_liquida":551.82,"custo_total":451.81,"tempo_entrega_dias":4,"avaliacao_cliente":3.3},{"id_pedido":"PED-0075","data_pedido":"2026-07-21","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":975.96,"desconto_pct":15.8,"receita_liquida":821.76,"custo_total":748.06,"tempo_entrega_dias":2,"avaliacao_cliente":4.3},{"id_pedido":"PED-0076","data_pedido":"2026-06-12","uf":"PR","regiao":"Sul","canal_venda":"Marketplace","categoria_produto":"Smart Home","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":10,"preco_unitario":874.56,"desconto_pct":0.0,"receita_liquida":8745.6,"custo_total":6530.06,"tempo_entrega_dias":5,"avaliacao_cliente":3.4},{"id_pedido":"PED-0077","data_pedido":"2025-09-25","uf":"AM","regiao":"Norte","canal_venda":"Marketplace","categoria_produto":"Audio","forma_pagamento":"Boleto","segmento_cliente":"Assinante","quantidade":3,"preco_unitario":607.22,"desconto_pct":10.0,"receita_liquida":1639.49,"custo_total":1213.18,"tempo_entrega_dias":8,"avaliacao_cliente":3.5},{"id_pedido":"PED-0078","data_pedido":"2026-05-22","uf":"SP","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Smartphones","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":10,"preco_unitario":1592.59,"desconto_pct":15.8,"receita_liquida":13409.61,"custo_total":13620.14,"tempo_entrega_dias":4,"avaliacao_cliente":3.8},{"id_pedido":"PED-0079","data_pedido":"2025-09-27","uf":"MG","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Monitores","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":2791.45,"desconto_pct":0.0,"receita_liquida":2791.45,"custo_total":2119.59,"tempo_entrega_dias":2,"avaliacao_cliente":4.0},{"id_pedido":"PED-0080","data_pedido":"2025-12-24","uf":"BA","regiao":"Nordeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"Assinante","quantidade":2,"preco_unitario":513.52,"desconto_pct":18.5,"receita_liquida":837.04,"custo_total":696.89,"tempo_entrega_dias":7,"avaliacao_cliente":4.5},{"id_pedido":"PED-0081","data_pedido":"2025-11-15","uf":"AM","regiao":"Norte","canal_venda":"E-commerce","categoria_produto":"Audio","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":8,"preco_unitario":598.34,"desconto_pct":12.5,"receita_liquida":4188.38,"custo_total":3246.77,"tempo_entrega_dias":12,"avaliacao_cliente":4.0},{"id_pedido":"PED-0082","data_pedido":"2026-02-22","uf":"SP","regiao":"Sudeste","canal_venda":"App Movel","categoria_produto":"Monitores","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":8,"preco_unitario":2352.65,"desconto_pct":0.0,"receita_liquida":18821.2,"custo_total":15164.73,"tempo_entrega_dias":1,"avaliacao_cliente":4.0},{"id_pedido":"PED-0083","data_pedido":"2026-06-08","uf":"RJ","regiao":"Sudeste","canal_venda":"App Movel","categoria_produto":"Notebooks","forma_pagamento":"Pix","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":3758.97,"desconto_pct":0.0,"receita_liquida":3758.97,"custo_total":2982.02,"tempo_entrega_dias":3,"avaliacao_cliente":4.0},{"id_pedido":"PED-0084","data_pedido":"2025-09-26","uf":"CE","regiao":"Nordeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":139.1,"desconto_pct":0.0,"receita_liquida":139.1,"custo_total":89.95,"tempo_entrega_dias":6,"avaliacao_cliente":4.3},{"id_pedido":"PED-0085","data_pedido":"2026-02-08","uf":"MS","regiao":"Centro-Oeste","canal_venda":"Marketplace","categoria_produto":"Notebooks","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":7345.31,"desconto_pct":0.0,"receita_liquida":7345.31,"custo_total":6010.49,"tempo_entrega_dias":3,"avaliacao_cliente":4.5},{"id_pedido":"PED-0086","data_pedido":"2026-02-15","uf":"SP","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Notebooks","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":2,"preco_unitario":5557.93,"desconto_pct":0.0,"receita_liquida":11115.86,"custo_total":9565.86,"tempo_entrega_dias":1,"avaliacao_cliente":4.1},{"id_pedido":"PED-0087","data_pedido":"2026-04-04","uf":"MA","regiao":"Nordeste","canal_venda":"Marketplace","categoria_produto":"Notebooks","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":4,"preco_unitario":5049.3,"desconto_pct":15.0,"receita_liquida":17167.62,"custo_total":16418.96,"tempo_entrega_dias":8,"avaliacao_cliente":3.2},{"id_pedido":"PED-0088","data_pedido":"2026-05-11","uf":"MG","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Pix","segmento_cliente":"Assinante","quantidade":1,"preco_unitario":2446.72,"desconto_pct":0.0,"receita_liquida":2446.72,"custo_total":1831.45,"tempo_entrega_dias":3,"avaliacao_cliente":3.1},{"id_pedido":"PED-0089","data_pedido":"2026-03-19","uf":"AM","regiao":"Norte","canal_venda":"Marketplace","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"Assinante","quantidade":5,"preco_unitario":299.93,"desconto_pct":14.2,"receita_liquida":1286.7,"custo_total":931.05,"tempo_entrega_dias":10,"avaliacao_cliente":3.9},{"id_pedido":"PED-0090","data_pedido":"2025-10-17","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Pix","segmento_cliente":"B2B","quantidade":8,"preco_unitario":941.26,"desconto_pct":0.0,"receita_liquida":7530.08,"custo_total":5712.62,"tempo_entrega_dias":1,"avaliacao_cliente":4.5},{"id_pedido":"PED-0091","data_pedido":"2026-06-20","uf":"RS","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Monitores","forma_pagamento":"Boleto","segmento_cliente":"B2B","quantidade":7,"preco_unitario":760.8,"desconto_pct":0.0,"receita_liquida":5325.6,"custo_total":4262.97,"tempo_entrega_dias":5,"avaliacao_cliente":3.7},{"id_pedido":"PED-0092","data_pedido":"2025-11-05","uf":"SC","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2C","quantidade":3,"preco_unitario":191.87,"desconto_pct":12.5,"receita_liquida":503.66,"custo_total":368.19,"tempo_entrega_dias":2,"avaliacao_cliente":4.7},{"id_pedido":"PED-0093","data_pedido":"2026-06-19","uf":"SC","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Smart Home","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":465.63,"desconto_pct":5.5,"receita_liquida":440.02,"custo_total":338.84,"tempo_entrega_dias":3,"avaliacao_cliente":4.2},{"id_pedido":"PED-0094","data_pedido":"2026-03-12","uf":"MG","regiao":"Sudeste","canal_venda":"Marketplace","categoria_produto":"Smartphones","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":3,"preco_unitario":2315.92,"desconto_pct":19.0,"receita_liquida":5627.69,"custo_total":5642.67,"tempo_entrega_dias":4,"avaliacao_cliente":5.0},{"id_pedido":"PED-0095","data_pedido":"2026-06-25","uf":"SP","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Smartphones","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":1,"preco_unitario":4103.58,"desconto_pct":5.5,"receita_liquida":3877.88,"custo_total":3604.32,"tempo_entrega_dias":3,"avaliacao_cliente":3.9},{"id_pedido":"PED-0096","data_pedido":"2026-07-02","uf":"MG","regiao":"Sudeste","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Pix","segmento_cliente":"B2C","quantidade":1,"preco_unitario":412.87,"desconto_pct":0.0,"receita_liquida":412.87,"custo_total":265.82,"tempo_entrega_dias":4,"avaliacao_cliente":3.9},{"id_pedido":"PED-0097","data_pedido":"2026-08-15","uf":"DF","regiao":"Centro-Oeste","canal_venda":"E-commerce","categoria_produto":"Smart Home","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":2,"preco_unitario":528.69,"desconto_pct":5.5,"receita_liquida":999.22,"custo_total":746.87,"tempo_entrega_dias":4,"avaliacao_cliente":4.4},{"id_pedido":"PED-0098","data_pedido":"2025-11-17","uf":"RS","regiao":"Sul","canal_venda":"E-commerce","categoria_produto":"Perifericos","forma_pagamento":"Cartao Debito","segmento_cliente":"B2C","quantidade":5,"preco_unitario":415.63,"desconto_pct":5.0,"receita_liquida":1974.24,"custo_total":1297.14,"tempo_entrega_dias":4,"avaliacao_cliente":4.3},{"id_pedido":"PED-0099","data_pedido":"2025-10-25","uf":"RS","regiao":"Sul","canal_venda":"Marketplace","categoria_produto":"Smartphones","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":15,"preco_unitario":3644.03,"desconto_pct":10.5,"receita_liquida":48921.1,"custo_total":48236.43,"tempo_entrega_dias":1,"avaliacao_cliente":3.1},{"id_pedido":"PED-0100","data_pedido":"2025-12-21","uf":"RJ","regiao":"Sudeste","canal_venda":"Loja Fisica","categoria_produto":"Perifericos","forma_pagamento":"Cartao Credito","segmento_cliente":"B2B","quantidade":12,"preco_unitario":109.21,"desconto_pct":11.8,"receita_liquida":1155.88,"custo_total":835.69,"tempo_entrega_dias":3,"avaliacao_cliente":4.1}]</script>
+<script>
+const ROWS = JSON.parse(document.getElementById('data').textContent);
+const MESES = ["2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07","2026-08"];
+const MESLBL = ["set/25","out/25","nov/25","dez/25","jan/26","fev/26","mar/26","abr/26","mai/26","jun/26","jul/26","ago/26"];
+const PAL = ["#1f5fbf","#0e9488","#d97e06","#c2455a","#6d5bbf","#4e8a3a"];
+const NEUTRO = "#cdd6e2";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const brl = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const brlK = v => v>=1e6 ? 'R$ '+(v/1e6).toFixed(1)+' mi' : v>=1e3 ? 'R$ '+(v/1e3).toFixed(0)+' mil' : brl.format(v);
+
+Chart.defaults.font.family = css('--body');
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#3c4d66';
+Chart.defaults.borderColor = 'rgba(22,35,58,.1)';
+Chart.defaults.plugins.legend.labels.boxWidth = 11;
+Chart.defaults.plugins.legend.labels.font = {size:11.5};
+Chart.defaults.plugins.tooltip.backgroundColor = '#16233a';
+Chart.defaults.plugins.tooltip.titleFont = {size:12,weight:'600'};
+Chart.defaults.plugins.tooltip.bodyFont = {size:11.5};
+Chart.defaults.maintainAspectRatio = false;
+
+const state = {segmento:null, categoria:null, canal:null, uf:null};
+
+function filtered(except){
+  return ROWS.filter(r =>
+    (except==='segmento' || !state.segmento || r.segmento_cliente===state.segmento) &&
+    (except==='categoria'|| !state.categoria|| r.categoria_produto===state.categoria) &&
+    (except==='canal'    || !state.canal    || r.canal_venda===state.canal) &&
+    (except==='uf'       || !state.uf       || r.uf===state.uf));
+}
+const sum = (a,f)=>a.reduce((s,r)=>s+f(r),0);
+const groupSum = (a,key,f)=>{const d={};a.forEach(r=>{d[r[key]]=(d[r[key]]||0)+f(r)});return d;};
+
+function renderKPIs(){
+  const F = filtered();
+  const rec = sum(F,r=>r.receita_liquida), cst = sum(F,r=>r.custo_total);
+  const kpis = [
+    {l:'Receita líquida', v:brlK(rec), hi:true},
+    {l:'Pedidos', v:F.length},
+    {l:'Ticket médio', v:F.length?brlK(rec/F.length):'—'},
+    {l:'Margem bruta', v:rec?((rec-cst)/rec*100).toFixed(1)+'<small>%</small>':'—'},
+    {l:'Avaliação média', v:F.length?(sum(F,r=>r.avaliacao_cliente)/F.length).toFixed(2)+'<small>/5</small>':'—'},
+    {l:'Entrega média', v:F.length?(sum(F,r=>r.tempo_entrega_dias)/F.length).toFixed(1)+'<small> dias</small>':'—'},
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k=>
+    `<div class="kpi${k.hi?' hi':''}"><div class="lbl">${k.l}</div><div class="val">${k.v}</div></div>`).join('');
+}
+
+function renderChips(){
+  const segs = ['B2C','B2B','Assinante'];
+  const any = Object.values(state).some(v=>v);
+  document.getElementById('segChips').innerHTML =
+    segs.map(s=>`<span class="chip ${state.segmento===s?'on':''}" data-seg="${s}">${s}</span>`).join('')
+    + (any?`<span class="chip clear" id="clearAll">✕ limpar filtros</span>`:'');
+  document.querySelectorAll('[data-seg]').forEach(el=>el.onclick=()=>{ state.segmento = state.segmento===el.dataset.seg?null:el.dataset.seg; refresh(); });
+  const c = document.getElementById('clearAll');
+  if(c) c.onclick = ()=>{ Object.keys(state).forEach(k=>state[k]=null); refresh(); };
+}
+
+let chMes, chCat, chCanal, chRadar, chScatter, chPag;
+
+function dataMes(){
+  const F = filtered();
+  const rec = MESES.map(m=>sum(F.filter(r=>r.data_pedido.startsWith(m)),r=>r.receita_liquida));
+  const ped = MESES.map(m=>F.filter(r=>r.data_pedido.startsWith(m)).length);
+  return {rec,ped};
+}
+function dataCat(){
+  const F = filtered('categoria');
+  const rec = groupSum(F,'categoria_produto',r=>r.receita_liquida);
+  const cst = groupSum(F,'categoria_produto',r=>r.custo_total);
+  const cats = Object.keys(rec).sort((a,b)=>rec[b]-rec[a]);
+  return {cats, rec, marg:Object.fromEntries(cats.map(c=>[c,((rec[c]-cst[c])/rec[c]*100).toFixed(1)]))};
+}
+function dataCanal(){
+  const F = filtered('canal');
+  const d = groupSum(F,'canal_venda',r=>r.receita_liquida);
+  const ks = Object.keys(d).sort((a,b)=>d[b]-d[a]);
+  return {ks, vs:ks.map(k=>d[k])};
+}
+function dataPag(){
+  const F = filtered();
+  const d = groupSum(F,'forma_pagamento',r=>r.receita_liquida);
+  const ks = ['Pix','Cartao Credito','Cartao Debito','Boleto'].filter(k=>d[k]);
+  return {ks, vs:ks.map(k=>d[k])};
+}
+function dataRadar(){
+  const F = filtered();
+  const met = ['Receita','Ticket médio','Avaliação','Rapidez entrega','Volume'];
+  const raw = {};
+  [...new Set(F.map(r=>r.regiao))].sort().forEach(reg=>{
+    const rr = F.filter(r=>r.regiao===reg); if(!rr.length) return;
+    raw[reg] = [ sum(rr,r=>r.receita_liquida),
+                 sum(rr,r=>r.receita_liquida)/rr.length,
+                 sum(rr,r=>r.avaliacao_cliente)/rr.length,
+                 -sum(rr,r=>r.tempo_entrega_dias)/rr.length,
+                 sum(rr,r=>r.quantidade) ];
+  });
+  const regs = Object.keys(raw);
+  const norm = {};
+  met.forEach((m,i)=>{
+    const vals = regs.map(r=>raw[r][i]);
+    const mn = Math.min(...vals), mx = Math.max(...vals);
+    regs.forEach(r=>{ (norm[r]=norm[r]||[])[i] = mx>mn ? (raw[r][i]-mn)/(mx-mn) : .5; });
+  });
+  return {met, regs, norm};
+}
+function dataScatter(){
+  const F = filtered();
+  const cats = [...new Set(ROWS.map(r=>r.categoria_produto))].sort();
+  return cats.map((c,i)=>({
+    label:c,
+    data:F.filter(r=>r.categoria_produto===c).map(r=>({
+      x:r.desconto_pct,
+      y:(r.receita_liquida-r.custo_total)/r.receita_liquida*100,
+      r:Math.max(3.5,Math.sqrt(r.receita_liquida)/16)})),
+    backgroundColor:PAL[i]+'99', borderColor:PAL[i], borderWidth:1.5
+  }));
+}
+
+/* ---------- cartograma ---------- */
+const TILES = {RR:[2,0],AP:[4,0],AM:[1,1],PA:[3,1],MA:[5,1],CE:[7,1],RN:[8,1],
+  AC:[0,2],RO:[2,2],TO:[4,2],PI:[6,2],PB:[8,2],MT:[3,3],BA:[5,3],PE:[7,3],AL:[8,3],
+  GO:[4,4],DF:[5,4],SE:[7,4],MS:[3,5],MG:[5,5],ES:[6,5],SP:[4,6],RJ:[5,6],PR:[4,7],SC:[5,7],RS:[4,8]};
+const RAMP = [[219,231,248],[143,180,232],[61,120,207],[18,63,133]];
+function rampColor(t){
+  const p = t*(RAMP.length-1), i = Math.min(RAMP.length-2, Math.floor(p)), f = p-i;
+  const mix = k => Math.round(RAMP[i][k]+(RAMP[i+1][k]-RAMP[i][k])*f);
+  return `rgb(${mix(0)},${mix(1)},${mix(2)})`;
+}
+function renderMapa(){
+  const F = filtered('uf');
+  const rec = groupSum(F,'uf',r=>r.receita_liquida);
+  const vals = Object.values(rec);
+  const mx = Math.max(1,...vals), mn = vals.length?Math.min(...vals):0;
+  document.getElementById('legMin').textContent = vals.length?brlK(mn):'—';
+  document.getElementById('legMax').textContent = vals.length?brlK(mx):'—';
+  const box = document.getElementById('mapa');
+  box.innerHTML = '';
+  Object.entries(TILES).forEach(([uf,[c,l]])=>{
+    const v = rec[uf]||0;
+    const el = document.createElement('div');
+    el.className = 'uf'+(v?'':' empty')+(state.uf===uf?' sel':'');
+    el.style.gridColumn = c+1; el.style.gridRow = l+1;
+    if(v){
+      const t = Math.sqrt(v/mx); /* escala raiz: espalha os valores baixos */
+      el.style.background = rampColor(t);
+      el.style.color = t > .55 ? '#f4f8ff' : '#122442';
+      el.title = uf+' · '+brl.format(v);
+      el.innerHTML = uf+`<small>${brlK(v).replace('R$ ','')}</small>`;
+      el.onclick = ()=>{ state.uf = state.uf===uf?null:uf; refresh(); };
+    } else { el.textContent = uf; }
+    box.appendChild(el);
+  });
+}
+
+function chartCtx(id){ return document.getElementById(id).getContext('2d'); }
+
+function build(){
+  const m = dataMes();
+  chMes = new Chart(chartCtx('chMes'),{
+    data:{labels:MESLBL,datasets:[
+      {type:'bar',label:'Receita',data:m.rec,backgroundColor:'#1f5fbfcc',borderColor:'#1f5fbf',borderWidth:1,borderRadius:4,yAxisID:'y'},
+      {type:'line',label:'Pedidos',data:m.ped,borderColor:'#d97e06',backgroundColor:'#d97e06',borderWidth:2.5,tension:.35,pointRadius:3.5,yAxisID:'y1'}]},
+    options:{scales:{y:{ticks:{callback:v=>brlK(v)}},y1:{position:'right',grid:{display:false},ticks:{precision:0}}},
+      plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.dataset.yAxisID==='y'?brl.format(c.raw):c.raw)}}}}
+  });
+
+  const c = dataCat();
+  chCat = new Chart(chartCtx('chCat'),{
+    type:'bar',
+    data:{labels:c.cats,datasets:[{data:c.cats.map(k=>c.rec[k]),
+      backgroundColor:c.cats.map((k,i)=>state.categoria&&state.categoria!==k?NEUTRO:PAL[i%6]),
+      borderRadius:4}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:x=>brl.format(x.raw)+' · margem '+c.marg[x.label]+'%'}}},
+      scales:{x:{ticks:{callback:v=>brlK(v)}}},
+      onClick:(e,els)=>{ if(els.length){ const k=chCat.data.labels[els[0].index]; state.categoria=state.categoria===k?null:k; refresh(); } }}
+  });
+
+  const cn = dataCanal();
+  chCanal = new Chart(chartCtx('chCanal'),{
+    type:'doughnut',
+    data:{labels:cn.ks,datasets:[{data:cn.vs,backgroundColor:PAL,borderColor:'#ffffff',borderWidth:3}]},
+    options:{cutout:'60%',plugins:{legend:{position:'bottom'},
+      tooltip:{callbacks:{label:x=>{const t=cn.vs.reduce((a,b)=>a+b,0);return x.label+': '+brl.format(x.raw)+' ('+(x.raw/t*100).toFixed(1)+'%)';}}}},
+      onClick:(e,els)=>{ if(els.length){ const k=chCanal.data.labels[els[0].index]; state.canal=state.canal===k?null:k; refresh(); } }}
+  });
+
+  const rd = dataRadar();
+  chRadar = new Chart(chartCtx('chRadar'),{
+    type:'radar',
+    data:{labels:rd.met,datasets:rd.regs.map((r,i)=>({label:r,data:rd.norm[r],
+      borderColor:PAL[i],backgroundColor:PAL[i]+'26',pointRadius:2.5,borderWidth:2}))},
+    options:{scales:{r:{min:0,max:1,ticks:{display:false},grid:{color:'rgba(22,35,58,.12)'},
+      angleLines:{color:'rgba(22,35,58,.12)'},pointLabels:{font:{size:11},color:'#3c4d66'}}},
+      plugins:{legend:{position:'bottom'}}}
+  });
+
+  chScatter = new Chart(chartCtx('chScatter'),{
+    type:'bubble',
+    data:{datasets:dataScatter()},
+    options:{scales:{x:{title:{display:true,text:'Desconto (%)',font:{size:11.5}}},
+      y:{title:{display:true,text:'Margem do pedido (%)',font:{size:11.5}}}},
+      plugins:{tooltip:{callbacks:{label:x=>x.dataset.label+': desc '+x.raw.x+'% · margem '+x.raw.y.toFixed(1)+'%'}}}}
+  });
+
+  const p = dataPag();
+  chPag = new Chart(chartCtx('chPag'),{
+    type:'bar',
+    data:{labels:p.ks.map(k=>k.replace('Cartao','Cartão')),datasets:[{data:p.vs,backgroundColor:['#1f5fbf','#0e9488','#6d5bbf','#d97e06'],borderRadius:4}]},
+    options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>brl.format(x.raw)}}},
+      scales:{y:{ticks:{callback:v=>brlK(v)}}}}
+  });
+}
+
+function refresh(){
+  renderKPIs(); renderChips(); renderMapa();
+  const m = dataMes();
+  chMes.data.datasets[0].data = m.rec; chMes.data.datasets[1].data = m.ped; chMes.update();
+  const c = dataCat();
+  chCat.data.labels = c.cats;
+  chCat.data.datasets[0].data = c.cats.map(k=>c.rec[k]);
+  chCat.data.datasets[0].backgroundColor = c.cats.map((k,i)=>state.categoria&&state.categoria!==k?NEUTRO:PAL[i%6]);
+  chCat.options.plugins.tooltip.callbacks.label = x=>brl.format(x.raw)+' · margem '+c.marg[x.label]+'%';
+  chCat.update();
+  const cn = dataCanal();
+  chCanal.data.labels = cn.ks; chCanal.data.datasets[0].data = cn.vs;
+  chCanal.data.datasets[0].backgroundColor = cn.ks.map((k,i)=>state.canal&&state.canal!==k?NEUTRO:PAL[i%6]);
+  chCanal.update();
+  const rd = dataRadar();
+  chRadar.data.datasets = rd.regs.map((r,i)=>({label:r,data:rd.norm[r],borderColor:PAL[i],backgroundColor:PAL[i]+'26',pointRadius:2.5,borderWidth:2}));
+  chRadar.update();
+  chScatter.data.datasets = dataScatter(); chScatter.update();
+  const p = dataPag();
+  chPag.data.labels = p.ks.map(k=>k.replace('Cartao','Cartão')); chPag.data.datasets[0].data = p.vs; chPag.update();
+}
+
+renderKPIs(); renderChips(); renderMapa(); build();
+</script>
+</body>
+</html>
