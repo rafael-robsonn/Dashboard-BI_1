@@ -2,7 +2,7 @@
 
 Dashboard interativo de vendas para um varejo fictício de eletrônicos, construído a partir de dados sintéticos como atividade de visualização de dados (CEUB, Ciência de Dados e Machine Learning).
 
-**[▶ Abrir o dashboard](rafael-robsonn.github.io/Dashboard-BI_1/dashboard_techvarejo.html)** — baixe o arquivo e abra no navegador (veja o preview abaixo).
+**[▶ Abrir o dashboard](./rafael-robsonn.github.io/Dashboard-BI_1/dashboard_techvarejo.html)** — baixe o arquivo e abra no navegador (veja o preview abaixo).
 
 ![Preview do dashboard](./dashboard_techvarejo.png)
 
